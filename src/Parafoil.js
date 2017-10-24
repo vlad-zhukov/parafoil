@@ -227,6 +227,10 @@ export default class Parafoil extends React.Component {
     };
 
     startMouseSlide = (ev) => {
+        if (this.props.disabled === true) {
+            return;
+        }
+
         this.setStartSlide(ev, ev.clientX, ev.clientY);
 
         if (typeof document.addEventListener === 'function') {
@@ -242,6 +246,10 @@ export default class Parafoil extends React.Component {
     };
 
     startTouchSlide = (ev) => {
+        if (this.props.disabled === true) {
+            return;
+        }
+
         if (ev.changedTouches.length > 1) return;
 
         const touch = ev.changedTouches[0];
@@ -320,7 +328,7 @@ export default class Parafoil extends React.Component {
     };
 
     handleClick = (ev) => {
-        if (ev.target.getAttribute('data-handle-key')) {
+        if (this.props.disabled === true || ev.target.getAttribute('data-handle-key')) {
             return;
         }
 
@@ -346,6 +354,10 @@ export default class Parafoil extends React.Component {
     };
 
     handleKeydown = (ev) => {
+        if (this.props.disabled === true) {
+            return;
+        }
+
         const idx = getHandleFor(ev);
 
         if (ev.keyCode === SliderConstants.KEYS.ESC) {
@@ -476,7 +488,7 @@ export default class Parafoil extends React.Component {
 
         return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-            <div className={className} ref={this.setRef} onClick={!disabled && this.handleClick} role="presentation">
+            <div className={className} ref={this.setRef} onClick={this.handleClick} role="presentation">
                 <div className={classNameBackground} />
                 {handlePos.map((pos, idx) => {
                     const handleStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
@@ -490,9 +502,9 @@ export default class Parafoil extends React.Component {
                             className={classNameHandle}
                             key={`handle-${idx}`} // eslint-disable-line react/no-array-index-key
                             onClick={this.killEvent}
-                            onKeyDown={!disabled && this.handleKeydown}
-                            onMouseDown={!disabled && this.startMouseSlide}
-                            onTouchStart={!disabled && this.startTouchSlide}
+                            onKeyDown={this.handleKeydown}
+                            onMouseDown={this.startMouseSlide}
+                            onTouchStart={this.startTouchSlide}
                             role="slider"
                             style={handleStyle}
                             tabIndex={0}
