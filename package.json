@@ -1,6 +1,6 @@
 {
   "name": "parafoil",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Yet another slider for React, but the last you'll ever need.",
   "author": "Josh Perez <josh.perez@airbnb.com>",
   "license": "MIT",
