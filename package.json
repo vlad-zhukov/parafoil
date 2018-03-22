@@ -1,6 +1,6 @@
 {
   "name": "parafoil",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Yet another slider for React, but the last you'll ever need.",
   "author": "Josh Perez <josh.perez@airbnb.com>",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "test": "jest",
     "lint": "eslint \"**/*.js\"",
     "prettier": "prettier-eslint \"**/*.js\" --write",
-    "prepublishOnly": "yarn lint && yarn build && yarn test"
+    "prepublishOnly": "yarn build && yarn lint && yarn test"
   },
   "dependencies": {
     "prop-types": "^15.6.1"
