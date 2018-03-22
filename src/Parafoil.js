@@ -490,6 +490,18 @@ export default class Parafoil extends React.Component {
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div className={className} ref={this.setRef} onClick={this.handleClick} role="presentation">
                 <div className={classNameBackground} />
+                {handlePos.map((node, idx) => {
+                    if (idx === 0 && handlePos.length > 1) {
+                        return null;
+                    }
+                    return (
+                        <ProgressBar
+                            className={classNameProgress}
+                            key={`progress-bar-${idx}`} // eslint-disable-line react/no-array-index-key
+                            style={this.getProgressStyle(idx)}
+                        />
+                    );
+                })}
                 {handlePos.map((pos, idx) => {
                     const handleStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
                     return (
@@ -508,18 +520,6 @@ export default class Parafoil extends React.Component {
                             role="slider"
                             style={handleStyle}
                             tabIndex={0}
-                        />
-                    );
-                })}
-                {handlePos.map((node, idx, arr) => {
-                    if (idx === 0 && arr.length > 1) {
-                        return null;
-                    }
-                    return (
-                        <ProgressBar
-                            className={classNameProgress}
-                            key={`progress-bar-${idx}`} // eslint-disable-line react/no-array-index-key
-                            style={this.getProgressStyle(idx)}
                         />
                     );
                 })}
