@@ -505,6 +505,22 @@ export default class Parafoil extends React.Component {
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div className={className} ref={this.setRef} onClick={this.handleClick} role="presentation">
                 <div className={classNameBackground} />
+                {PitComponent &&
+                    pitPoints.map((n) => {
+                        let pitStyle = this.pitStyleCache[n];
+
+                        if (!pitStyle) {
+                            const pos = algorithm.getPosition(n, min, max);
+                            pitStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
+                            this.pitStyleCache[n] = pitStyle;
+                        }
+
+                        return (
+                            <PitComponent key={`pit-${n}`} style={pitStyle}>
+                                {n}
+                            </PitComponent>
+                        );
+                    })}
                 {handlePos.map((node, idx) => {
                     if (idx === 0 && handlePos.length > 1) {
                         return null;
@@ -538,22 +554,6 @@ export default class Parafoil extends React.Component {
                         />
                     );
                 })}
-                {PitComponent &&
-                    pitPoints.map((n) => {
-                        let pitStyle = this.pitStyleCache[n];
-
-                        if (!pitStyle) {
-                            const pos = algorithm.getPosition(n, min, max);
-                            pitStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
-                            this.pitStyleCache[n] = pitStyle;
-                        }
-
-                        return (
-                            <PitComponent key={`pit-${n}`} style={pitStyle}>
-                                {n}
-                            </PitComponent>
-                        );
-                    })}
                 {children}
             </div>
         );
