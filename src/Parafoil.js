@@ -20,10 +20,12 @@ export default class Parafoil extends React.Component {
             slidingIndex: null,
             values,
         };
+
+        this.pitStyleCache = {};
     }
 
     componentWillReceiveProps(nextProps) {
-        const {disabled, min, max} = this.props;
+        const {disabled, min, max, className, orientation, pitPoints, algorithm} = this.props;
         const {values, slidingIndex} = this.state;
 
         const minMaxChanged = nextProps.min !== min || nextProps.max !== max;
@@ -31,10 +33,25 @@ export default class Parafoil extends React.Component {
         const valuesChanged =
             values.length !== nextProps.values.length || values.some((value, idx) => nextProps.values[idx] !== value);
 
+        const orientationChanged = nextProps.className !== className || nextProps.orientation !== orientation;
+
         const willBeDisabled = nextProps.disabled && !disabled;
+
+        if (orientationChanged) {
+            this.setState({className: getClassName(nextProps)});
+        }
 
         if (minMaxChanged || valuesChanged) {
             this.updateNewValues(nextProps);
+        }
+
+        if (
+            minMaxChanged ||
+            orientationChanged ||
+            nextProps.pitPoints !== pitPoints ||
+            nextProps.algorithm !== algorithm
+        ) {
+            this.pitStyleCache = {};
         }
 
         if (willBeDisabled && slidingIndex !== null) {
@@ -425,9 +442,7 @@ export default class Parafoil extends React.Component {
 
         const prevHandlePosition = handlePos[idx - 1] !== undefined ? handlePos[idx - 1] + handleDimensions : -Infinity;
 
-        if (proposedPosition < prevHandlePosition) return false;
-
-        return true;
+        return proposedPosition >= prevHandlePosition;
     };
 
     fireChangeEvent = () => {
@@ -525,8 +540,14 @@ export default class Parafoil extends React.Component {
                 })}
                 {PitComponent &&
                     pitPoints.map((n) => {
-                        const pos = algorithm.getPosition(n, min, max);
-                        const pitStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
+                        let pitStyle = this.pitStyleCache[n];
+
+                        if (!pitStyle) {
+                            const pos = algorithm.getPosition(n, min, max);
+                            pitStyle = orientation === 'vertical' ? {top: `${pos}%`} : {left: `${pos}%`};
+                            this.pitStyleCache[n] = pitStyle;
+                        }
+
                         return (
                             <PitComponent key={`pit-${n}`} style={pitStyle}>
                                 {n}
