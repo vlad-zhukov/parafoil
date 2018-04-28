@@ -25,7 +25,7 @@ export default class Parafoil extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {disabled, min, max, className, orientation, pitPoints, algorithm} = this.props;
+        const {disabled, min, max, orientation, pitPoints, algorithm} = this.props;
         const {values, slidingIndex} = this.state;
 
         const minMaxChanged = nextProps.min !== min || nextProps.max !== max;
@@ -33,13 +33,9 @@ export default class Parafoil extends React.Component {
         const valuesChanged =
             values.length !== nextProps.values.length || values.some((value, idx) => nextProps.values[idx] !== value);
 
-        const orientationChanged = nextProps.className !== className || nextProps.orientation !== orientation;
+        const orientationChanged = nextProps.orientation !== orientation;
 
         const willBeDisabled = nextProps.disabled && !disabled;
-
-        if (orientationChanged) {
-            this.setState({className: getClassName(nextProps)});
-        }
 
         if (minMaxChanged || valuesChanged) {
             this.updateNewValues(nextProps);
